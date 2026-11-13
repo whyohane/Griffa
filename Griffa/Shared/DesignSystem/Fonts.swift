@@ -27,6 +27,10 @@ enum Fonts {
         scaled("ElmsSans-Bold", size: 28, style: .title1)
     }
 
+    static func button() -> UIFont {
+        scaled("ElmsSans-SemiBold", size: 14, style: .subheadline)
+    }
+
     /// Carrega a fonte pelo nome PostScript e a faz acompanhar o Dynamic Type.
     private static func scaled(_ name: String, size: CGFloat, style: UIFont.TextStyle) -> UIFont {
         guard let font = UIFont(name: name, size: size) else {
