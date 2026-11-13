@@ -14,7 +14,7 @@
 		1D471CD330A6A01C00859EB6 /* Exceptions for "Griffa" folder in "Griffa" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Info.plist,
+				App/Info.plist,
 			);
 			target = 1D471CC030A6A01B00859EB6 /* Griffa */;
 		};
@@ -137,7 +137,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 5ZA287RU8X;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Griffa/Info.plist;
+				INFOPLIST_FILE = Griffa/App/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.books";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
@@ -174,7 +174,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 5ZA287RU8X;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Griffa/Info.plist;
+				INFOPLIST_FILE = Griffa/App/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.books";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
