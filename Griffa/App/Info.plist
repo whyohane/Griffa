@@ -19,5 +19,13 @@
 			</array>
 		</dict>
 	</dict>
+	<key>UIAppFonts</key>
+	<array>
+		<string>ElmsSans-Regular.ttf</string>
+		<string>ElmsSans-Italic.ttf</string>
+		<string>ElmsSans-Medium.ttf</string>
+		<string>ElmsSans-SemiBold.ttf</string>
+		<string>ElmsSans-Bold.ttf</string>
+	</array>
 </dict>
 </plist>
