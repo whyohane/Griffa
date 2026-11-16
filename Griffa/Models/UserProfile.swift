@@ -7,5 +7,4 @@
 
 struct UserProfile: Codable {
     let name: String
-    let yearlyGoal: Int
 }
