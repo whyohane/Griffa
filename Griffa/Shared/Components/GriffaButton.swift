@@ -34,7 +34,15 @@ final class GriffaButton: UIButton {
         configuration.contentInsets = NSDirectionalEdgeInsets(top: 19, leading: 24, bottom: 19, trailing: 24)
         configuration.baseBackgroundColor = UIColor(resource: .primaryPurple)
         self.configuration = configuration
-        
+
+        // Versão "desabilitada": mesma cor com opacidade reduzida
+        configurationUpdateHandler = { button in
+            var updated = button.configuration
+            let purple = UIColor(resource: .primaryPurple)
+            updated?.baseBackgroundColor = button.isEnabled ? purple : purple.withAlphaComponent(0.4)
+            button.configuration = updated
+        }
+
         translatesAutoresizingMaskIntoConstraints = false
         heightAnchor.constraint(greaterThanOrEqualToConstant: 50).isActive = true
     }
