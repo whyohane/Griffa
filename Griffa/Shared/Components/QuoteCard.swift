@@ -33,13 +33,13 @@ final class QuoteCard: UIView {
 
     private func configure() {
         backgroundColor = .systemBackground
-        layer.cornerRadius = 16
+        layer.cornerRadius = 5
         layer.shadowColor = UIColor.black.cgColor
-        layer.shadowOpacity = 0.12
-        layer.shadowRadius = 6
-        layer.shadowOffset = CGSize(width: 0, height: 2)
+        layer.shadowOpacity = 0.10
+        layer.shadowRadius = 4
+        layer.shadowOffset = CGSize(width: 0, height: 4)
         translatesAutoresizingMaskIntoConstraints = false
-        heightAnchor.constraint(greaterThanOrEqualToConstant: 50).isActive = true
+        heightAnchor.constraint(greaterThanOrEqualToConstant: 250).isActive = true
     }
 
     private func setupTitleLabel(_ title: String) {
@@ -79,7 +79,6 @@ final class QuoteCard: UIView {
         addSubview(dividerView)
 
         NSLayoutConstraint.activate([
-            // Mínimo de respiro entre a citação e a linha; o card pode ter mais espaço se for maior.
             dividerView.topAnchor.constraint(greaterThanOrEqualTo: quoteLabel.bottomAnchor, constant: 24),
             dividerView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: horizontalMargin),
             dividerView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -horizontalMargin),
@@ -120,3 +119,8 @@ final class QuoteCard: UIView {
         ])
     }
 }
+
+#Preview {
+    QuoteCard(title: "Quote of the day", quote: "I knew who I was when I got up this morning, but I think I must have been changed several times since then.", bookTitle: "Alice's Adventures in Wonderland", author: "Lewis Caroll", page: 56)
+}
+
