@@ -78,10 +78,8 @@ final class OnboardingView: UIView {
 
     // MARK: - Interface com o controller
 
-    /// Chamado a cada alteração no campo de nome.
     var onNameChange: ((String) -> Void)?
 
-    /// Chamado ao tocar em "Continue".
     var onContinue: (() -> Void)?
 
     var name: String {

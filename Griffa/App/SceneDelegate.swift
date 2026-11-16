@@ -28,7 +28,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     // MARK: - Fluxo inicial
 
     private func initialViewController() -> UIViewController {
-        profileStore.profile == nil ? makeOnboarding() : MainTabBarController()
+        profileStore.profile == nil ? makeOnboarding() : MainTabBarController(profileStore: profileStore)
     }
 
     private func makeOnboarding() -> UIViewController {
@@ -42,8 +42,9 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     private func showMainInterface() {
         guard let window else { return }
+        let tabBarController = MainTabBarController(profileStore: profileStore)
         UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve) {
-            window.rootViewController = MainTabBarController()
+            window.rootViewController = tabBarController
         }
     }
 }

@@ -41,7 +41,6 @@ final class GriffaTextField: UITextField {
 
         updateAppearance()
 
-        // A borda é um CGColor e não acompanha Dark Mode sozinha
         registerForTraitChanges([UITraitUserInterfaceStyle.self]) { (self: Self, _) in
             self.updateAppearance()
         }
@@ -50,9 +49,6 @@ final class GriffaTextField: UITextField {
         heightAnchor.constraint(greaterThanOrEqualToConstant: 50).isActive = true
     }
 
-    // MARK: - Selecionado / não selecionado
-
-    // "Selecionado" = campo em foco (teclado aberto)
     override func becomeFirstResponder() -> Bool {
         let didBecome = super.becomeFirstResponder()
         updateAppearance()
