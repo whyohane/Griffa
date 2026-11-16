@@ -8,11 +8,11 @@ import UIKit
 enum Fonts {
 
     static func body() -> UIFont {
-        scaled("ElmsSans-Regular", size: 17, style: .body)
+        scaled("ElmsSans-Regular", size: 14, style: .body)
     }
 
     static func bodyMedium() -> UIFont {
-        scaled("ElmsSans-Medium", size: 17, style: .body)
+        scaled("ElmsSans-Medium", size: 14, style: .body)
     }
 
     static func quote() -> UIFont {
@@ -31,7 +31,6 @@ enum Fonts {
         scaled("ElmsSans-SemiBold", size: 14, style: .subheadline)
     }
 
-    /// Carrega a fonte pelo nome PostScript e a faz acompanhar o Dynamic Type.
     private static func scaled(_ name: String, size: CGFloat, style: UIFont.TextStyle) -> UIFont {
         guard let font = UIFont(name: name, size: size) else {
             assertionFailure("Fonte \(name) não encontrada. Confira o UIAppFonts e o nome PostScript.")
