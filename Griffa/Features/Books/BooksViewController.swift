@@ -10,7 +10,7 @@ final class BooksViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Read Books"
+        title = "Books"
         view.backgroundColor = .systemBackground
     }
 }

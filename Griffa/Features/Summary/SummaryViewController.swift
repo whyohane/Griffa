@@ -10,7 +10,7 @@ final class SummaryViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Start Page"
+        title = "Summary"
         view.backgroundColor = .systemBackground
     }
 }
