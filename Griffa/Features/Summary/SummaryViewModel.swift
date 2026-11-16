@@ -14,9 +14,19 @@ final class SummaryViewModel {
         self.store = store
     }
 
-    /// Saudação com o nome salvo no onboarding.
     var greeting: String {
         guard let name = store.profile?.name else { return "Hello!" }
         return "Hello, \(name)!"
+    }
+    
+    var dateText: String {
+        Date.now.formatted(
+            .dateTime
+                .weekday(.wide)
+                .month(.wide)
+                .day()
+                .locale(Locale(identifier: "en_US"))
+        )
+        .uppercased()
     }
 }

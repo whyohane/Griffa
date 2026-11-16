@@ -8,14 +8,31 @@ import UIKit
 
 final class MainTabBarController: UITabBarController {
 
+    private let profileStore: UserProfileStore
+
+    init(profileStore: UserProfileStore) {
+        self.profileStore = profileStore
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) não é usado")
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupTabBarAppearance()
         setupTabs()
+    }
+
+    private func setupTabBarAppearance() {
+        tabBar.tintColor = UIColor(resource: .primaryPurple)
     }
 
     private func setupTabs() {
         let summary = makeTab(
-            root: SummaryViewController(),
+            root: SummaryViewController(viewModel: SummaryViewModel(store: profileStore)),
             title: "Summary",
             systemImage: "book.fill"
         )
