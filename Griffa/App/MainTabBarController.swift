@@ -9,9 +9,13 @@ import UIKit
 final class MainTabBarController: UITabBarController {
 
     private let profileStore: UserProfileStore
+    private let booksService: BooksService
+    private let booksStore: BooksStore
 
-    init(profileStore: UserProfileStore) {
+    init(profileStore: UserProfileStore, booksService: BooksService, booksStore: BooksStore) {
         self.profileStore = profileStore
+        self.booksService = booksService
+        self.booksStore = booksStore
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -37,7 +41,11 @@ final class MainTabBarController: UITabBarController {
             systemImage: "book.fill"
         )
         let books = makeTab(
-            root: BooksViewController(),
+            root: BooksViewController(
+                viewModel: BooksViewModel(store: booksStore),
+                booksService: booksService,
+                booksStore: booksStore
+            ),
             title: "Books",
             systemImage: "books.vertical.fill"
         )
