@@ -8,6 +8,7 @@
 
 /* Begin PBXFileReference section */
 		1D471CC130A6A01B00859EB6 /* Griffa.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Griffa.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1D471EBF30ABBF1900859EB6 /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -44,6 +45,7 @@
 			isa = PBXGroup;
 			children = (
 				1D471CC330A6A01B00859EB6 /* Griffa */,
+				1D471EC030ABBF1900859EB6 /* Config */,
 				1D471CC230A6A01B00859EB6 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -54,6 +56,14 @@
 				1D471CC130A6A01B00859EB6 /* Griffa.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		1D471EC030ABBF1900859EB6 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				1D471EBF30ABBF1900859EB6 /* Secrets.xcconfig */,
+			);
+			path = Config;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -131,6 +141,7 @@
 /* Begin XCBuildConfiguration section */
 		1D471CD530A6A01C00859EB6 /* Debug configuration for PBXNativeTarget "Griffa" */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1D471EBF30ABBF1900859EB6 /* Secrets.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -169,6 +180,7 @@
 		};
 		1D471CD630A6A01C00859EB6 /* Release configuration for PBXNativeTarget "Griffa" */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1D471EBF30ABBF1900859EB6 /* Secrets.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;

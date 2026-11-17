@@ -6,11 +6,18 @@
 //
 
 import Foundation
+import SwiftData
 
-struct Quote {
-    
-    let id = UUID()
-    let textQuote: String
-    let book: Book
-    
+@Model
+class Quote {
+    var id = UUID()
+    var textQuote: String
+    var book: Book
+    var date: Date = Date()
+    init(id: UUID, textQuote: String, book: Book, date: Date) {
+        self.id = id
+        self.textQuote = textQuote
+        self.book = book
+        self.date = date
+    }
 }

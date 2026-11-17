@@ -25,7 +25,7 @@ final class QuotesViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Quotes"
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = .backgroundPurple
         setupGriffaNavigationBar { [weak self] in
             self?.presentAddModal()
         }
@@ -33,7 +33,7 @@ final class QuotesViewController: UIViewController {
 
     private func presentAddModal() {
         let modal = UIViewController()
-        modal.view.backgroundColor = .systemBackground
+        modal.view.backgroundColor = UIColor(resource: .backgroundSheet)
         modal.sheetPresentationController?.detents = [.medium(), .large()]
         present(modal, animated: true)
     }

@@ -9,10 +9,10 @@ import UIKit
 
 extension UIViewController {
 
-    func setupGriffaNavigationBar(onAdd: @escaping () -> Void) {
+    func setupGriffaNavigationBar(onAdd: (() -> Void)? = nil) {
         navigationItem.leftBarButtonItem = makeMascotItem()
         navigationItem.titleView = makeAppNameView()
-        navigationItem.rightBarButtonItem = makeAddItem(onAdd: onAdd)
+        navigationItem.rightBarButtonItem = onAdd.map { makeAddItem(onAdd: $0) }
     }
 
     private func makeMascotItem() -> UIBarButtonItem {
@@ -35,7 +35,7 @@ extension UIViewController {
             image: UIImage(systemName: "plus"),
             primaryAction: UIAction { _ in onAdd() }
         )
-        // .prominent preenche o fundo (vidro) com o tint
+
         item.style = .prominent
         item.tintColor = UIColor(resource: .primaryPurple)
         item.accessibilityLabel = "Add"

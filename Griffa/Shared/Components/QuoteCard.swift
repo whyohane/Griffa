@@ -32,7 +32,7 @@ final class QuoteCard: UIView {
     }
 
     private func configure() {
-        backgroundColor = .systemBackground
+        backgroundColor = UIColor(resource: .backgroundCard)
         layer.cornerRadius = 5
         layer.shadowColor = UIColor.black.cgColor
         layer.shadowOpacity = 0.10
