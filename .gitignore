@@ -30,3 +30,6 @@ Pods/
 
 # Claude Code (configuração local)
 .claude/settings.local.json
+
+# Segredos locais (chave de API)
+Config/Secrets.xcconfig
