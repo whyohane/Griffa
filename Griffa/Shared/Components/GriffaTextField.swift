@@ -32,7 +32,7 @@ final class GriffaTextField: UITextField {
         textColor = .label
         tintColor = UIColor(resource: .primaryPurple)
 
-        backgroundColor = .systemBackground
+        backgroundColor = UIColor(resource: .backgroundTextField)
         layer.cornerRadius = 12
 
         autocorrectionType = .no
@@ -68,8 +68,6 @@ final class GriffaTextField: UITextField {
             ? UIColor(resource: .primaryPurple).cgColor
         : UIColor(resource: .strokeTextField).cgColor
     }
-
-    // MARK: - Padding interno
 
     override func textRect(forBounds bounds: CGRect) -> CGRect {
         bounds.inset(by: contentInsets)
