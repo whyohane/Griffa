@@ -30,16 +30,7 @@ final class SummaryViewController: UIViewController {
         title = "Summary"
         summaryView.setDate(viewModel.dateText)
         summaryView.setGreeting(viewModel.greeting)
-        setupGriffaNavigationBar { [weak self] in
-            self?.presentAddModal()
-        }
-    }
-
-    private func presentAddModal() {
-        let modal = UIViewController()
-        modal.view.backgroundColor = UIColor(resource: .backgroundPurple)
-        modal.sheetPresentationController?.detents = [.medium(), .large()]
-        present(modal, animated: true)
+        setupGriffaNavigationBar()      // a Summary não tem o botão "+"
     }
 }
 
