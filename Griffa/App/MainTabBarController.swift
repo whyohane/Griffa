@@ -36,7 +36,7 @@ final class MainTabBarController: UITabBarController {
 
     private func setupTabs() {
         let summary = makeTab(
-            root: SummaryViewController(viewModel: SummaryViewModel(store: profileStore)),
+            root: SummaryViewController(viewModel: SummaryViewModel(store: profileStore, booksStore: booksStore)),
             title: "Summary",
             systemImage: "book.fill"
         )
