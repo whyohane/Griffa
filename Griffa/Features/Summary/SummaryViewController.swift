@@ -32,5 +32,11 @@ final class SummaryViewController: UIViewController {
         summaryView.setGreeting(viewModel.greeting)
         setupGriffaNavigationBar()      // a Summary não tem o botão "+"
     }
+
+    // Recarrega a cada aparição: o usuário pode ter adicionado um livro na aba Books
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        summaryView.showReadingBooks(viewModel.readingBooks())
+    }
 }
 
