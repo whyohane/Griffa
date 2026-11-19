@@ -67,18 +67,14 @@ final class QuotesViewModel {
 
     private func makeCard(for quote: Quote) -> QuoteCardContent {
         QuoteCardContent(
-            id: quote.id,
+            quote: quote,
             title: quote.date.formatted(
                 .dateTime
                     .weekday(.wide)
                     .month(.wide)
                     .day()
                     .locale(Locale(identifier: "en_US"))
-            ),
-            quote: quote.textQuote,
-            bookTitle: quote.book.title,
-            author: quote.book.author,
-            page: quote.page
+            )
         )
     }
 }

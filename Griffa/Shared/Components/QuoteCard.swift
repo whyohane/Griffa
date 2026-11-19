@@ -16,6 +16,21 @@ struct QuoteCardContent {
     let page: Int?
 }
 
+extension QuoteCardContent {
+
+    /// Monta o conteúdo do card a partir de uma quote salva; o título muda conforme a tela.
+    init(quote: Quote, title: String) {
+        self.init(
+            id: quote.id,
+            title: title,
+            quote: quote.textQuote,
+            bookTitle: quote.book.title,
+            author: quote.book.author,
+            page: quote.page
+        )
+    }
+}
+
 final class QuoteCard: UIView {
 
     private let titleLabel = UILabel()
@@ -49,6 +64,33 @@ final class QuoteCard: UIView {
     @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) não é usado")
+    }
+
+    /// Troca o conteúdo do card (ex.: a quote do dia mudou).
+    func configure(with content: QuoteCardContent) {
+        titleLabel.text = content.title.uppercased()
+        quoteLabel.text = "\"\(content.quote)\""
+        bookTitleLabel.text = content.bookTitle
+        authorLabel.text = Self.authorText(author: content.author, page: content.page)
+        setBookInfoHidden(false)
+    }
+
+    /// Mostra só um aviso (sem livro, autor ou divisor), para quando não há quote para exibir.
+    func showMessage(title: String, message: String) {
+        titleLabel.text = title.uppercased()
+        quoteLabel.text = message
+        setBookInfoHidden(true)
+    }
+
+    private func setBookInfoHidden(_ isHidden: Bool) {
+        dividerView.isHidden = isHidden
+        bookTitleLabel.isHidden = isHidden
+        authorLabel.isHidden = isHidden
+    }
+
+    // A página é opcional: sem ela, só o autor
+    private static func authorText(author: String, page: Int?) -> String {
+        page.map { "\(author) • p. \($0)" } ?? author
     }
 
     private func configure() {
@@ -123,7 +165,7 @@ final class QuoteCard: UIView {
     }
 
     private func setupAuthorLabel(author: String, page: Int?) {
-        authorLabel.text = page.map { "\(author) • p. \($0)" } ?? author
+        authorLabel.text = Self.authorText(author: author, page: page)
         authorLabel.font = Fonts.body()
         authorLabel.adjustsFontForContentSizeCategory = true
         authorLabel.textColor = .secondaryLabel
