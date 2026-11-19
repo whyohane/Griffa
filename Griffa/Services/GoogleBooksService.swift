@@ -96,9 +96,6 @@ private extension Book {
         )
     }
 
-    /// O Google devolve a capa como miniatura (`zoom=1`, só 128px de largura) e com efeito de página dobrada (`edge=curl`).
-    /// Aqui pedimos `zoom=3` (~575px, boa para a capa grande da tela de detalhes e nítida na lista) e sem a dobra.
-    /// A mesma URL serve para a lista e para os detalhes, então a imagem baixada na busca já está no cache.
     static func coverURL(from link: String?) -> URL? {
         guard let link,
               var components = URLComponents(string: link.replacingOccurrences(of: "http://", with: "https://")) else {
