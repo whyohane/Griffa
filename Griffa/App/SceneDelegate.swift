@@ -23,6 +23,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
     }()
     private lazy var booksStore: BooksStore = SwiftDataBooksStore(container: modelContainer)
+    private lazy var quotesStore: QuotesStore = SwiftDataQuotesStore(container: modelContainer)
 
     func scene(
         _ scene: UIScene,
@@ -53,7 +54,12 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     private func makeMainInterface() -> UIViewController {
-        MainTabBarController(profileStore: profileStore, booksService: booksService, booksStore: booksStore)
+        MainTabBarController(
+            profileStore: profileStore,
+            booksService: booksService,
+            booksStore: booksStore,
+            quotesStore: quotesStore
+        )
     }
 
     private func showMainInterface() {
