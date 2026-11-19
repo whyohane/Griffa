@@ -27,14 +27,15 @@ final class SummaryView: UIView {
         return dateLabel
     }()
     
-    private let quoteCard = QuoteCard(
-        title: "Quote of the day",
-        quote: "I knew who I was when I got up this morning, but I think I must have been changed several times since then.",
-        bookTitle: "Alice's Adventures in Wonderland",
-        author: "Lewis Carroll",
-        page: 56
-    )
-    
+    // Começa com o aviso de "sem quotes"; o controller troca pelo conteúdo real
+    private let quoteCard: QuoteCard = {
+        let card = QuoteCard(content: QuoteCardContent(
+            id: UUID(), title: Summary.quoteTitle, quote: "", bookTitle: "", author: "", page: nil
+        ))
+        card.showMessage(title: Summary.quoteTitle, message: Summary.emptyQuoteMessage)
+        return card
+    }()
+
     private let readingLabelView: UILabel = {
         let readingLabel = UILabel()
         readingLabel.text = "Reading now".uppercased()
@@ -63,6 +64,15 @@ final class SummaryView: UIView {
     
     /// O usuário tocou no card de um livro em "Reading now".
     var onSelectBook: ((UUID) -> Void)?
+
+    /// Mostra a quote do dia, ou o aviso quando ainda não há nenhuma quote salva.
+    func showQuoteOfTheDay(_ content: QuoteCardContent?) {
+        if let content {
+            quoteCard.configure(with: content)
+        } else {
+            quoteCard.showMessage(title: Summary.quoteTitle, message: Summary.emptyQuoteMessage)
+        }
+    }
 
     func setDate(_ text: String) {
         dateLabelView.text = text
@@ -165,7 +175,17 @@ final class SummaryView: UIView {
     }
 }
 
+private enum Summary {
+    static let quoteTitle = "Quote of the day"
+    static let emptyQuoteMessage = "Save a quote in the Quotes tab and one of them will show up here every day."
+}
+
 #Preview {
-    let viewModel = SummaryViewModel(store: UserDefaultsProfileStore(), booksStore: SwiftDataBooksStore.inMemory())
+    let viewModel = SummaryViewModel(
+        store: UserDefaultsProfileStore(),
+        booksStore: SwiftDataBooksStore.inMemory(),
+        quotesStore: SwiftDataQuotesStore.inMemory(),
+        quoteOfTheDayStore: UserDefaultsQuoteOfTheDayStore()
+    )
     return UINavigationController(rootViewController: SummaryViewController(viewModel: viewModel))
 }

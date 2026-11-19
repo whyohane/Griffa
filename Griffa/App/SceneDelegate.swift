@@ -24,6 +24,7 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }()
     private lazy var booksStore: BooksStore = SwiftDataBooksStore(container: modelContainer)
     private lazy var quotesStore: QuotesStore = SwiftDataQuotesStore(container: modelContainer)
+    private let quoteOfTheDayStore: QuoteOfTheDayStore = UserDefaultsQuoteOfTheDayStore()
 
     func scene(
         _ scene: UIScene,
@@ -58,7 +59,8 @@ final class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             profileStore: profileStore,
             booksService: booksService,
             booksStore: booksStore,
-            quotesStore: quotesStore
+            quotesStore: quotesStore,
+            quoteOfTheDayStore: quoteOfTheDayStore
         )
     }
 

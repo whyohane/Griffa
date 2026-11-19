@@ -29,3 +29,17 @@ final class SwiftDataQuotesStore: QuotesStore {
         return try context.fetch(descriptor)
     }
 }
+
+extension SwiftDataQuotesStore {
+
+    /// Armazenamento só em memória, para previews e testes.
+    static func inMemory() -> SwiftDataQuotesStore {
+        let configuration = ModelConfiguration(isStoredInMemoryOnly: true)
+        do {
+            let container = try ModelContainer(for: Book.self, Quote.self, configurations: configuration)
+            return SwiftDataQuotesStore(container: container)
+        } catch {
+            fatalError("Não foi possível criar o armazenamento em memória: \(error)")
+        }
+    }
+}

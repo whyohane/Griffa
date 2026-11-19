@@ -12,17 +12,20 @@ final class MainTabBarController: UITabBarController {
     private let booksService: BooksService
     private let booksStore: BooksStore
     private let quotesStore: QuotesStore
+    private let quoteOfTheDayStore: QuoteOfTheDayStore
 
     init(
         profileStore: UserProfileStore,
         booksService: BooksService,
         booksStore: BooksStore,
-        quotesStore: QuotesStore
+        quotesStore: QuotesStore,
+        quoteOfTheDayStore: QuoteOfTheDayStore
     ) {
         self.profileStore = profileStore
         self.booksService = booksService
         self.booksStore = booksStore
         self.quotesStore = quotesStore
+        self.quoteOfTheDayStore = quoteOfTheDayStore
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -43,7 +46,12 @@ final class MainTabBarController: UITabBarController {
 
     private func setupTabs() {
         let summary = makeTab(
-            root: SummaryViewController(viewModel: SummaryViewModel(store: profileStore, booksStore: booksStore)),
+            root: SummaryViewController(viewModel: SummaryViewModel(
+                store: profileStore,
+                booksStore: booksStore,
+                quotesStore: quotesStore,
+                quoteOfTheDayStore: quoteOfTheDayStore
+            )),
             title: "Summary",
             systemImage: "book.fill"
         )

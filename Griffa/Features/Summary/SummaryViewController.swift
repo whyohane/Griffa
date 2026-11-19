@@ -61,6 +61,8 @@ final class SummaryViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         summaryView.showReadingBooks(viewModel.readingBooks())
+        // Estável durante o dia: só muda quando vira o dia
+        summaryView.showQuoteOfTheDay(viewModel.quoteOfTheDay())
     }
 }
 
