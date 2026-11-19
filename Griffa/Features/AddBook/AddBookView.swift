@@ -118,7 +118,7 @@ final class AddBookView: UIView {
 
         // Tecla "Search" fecha o teclado
         searchBarComponent.addAction(UIAction { [weak self] _ in
-            self?.searchBarComponent.resignFirstResponder()
+            _ = self?.searchBarComponent.resignFirstResponder()
         }, for: .primaryActionTriggered)
 
         resultsCard.onSelectBook = { [weak self] book in
