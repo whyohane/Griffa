@@ -7,12 +7,13 @@
 
 import Foundation
 
-/// Biblioteca do usuário. As telas e ViewModels conhecem só este protocolo, não o SwiftData.
 protocol BooksStore {
-    /// Adiciona o livro à biblioteca, na estante indicada e com a capa já baixada (se houver).
+
     func add(_ book: Book, status: ReadingStatus, coverData: Data?) throws
 
     func allBooks() throws -> [Book]
+
+    func setCurrentPage(_ page: Int, for book: Book) throws
 }
 
 extension Notification.Name {

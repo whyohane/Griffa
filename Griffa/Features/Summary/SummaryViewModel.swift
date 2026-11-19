@@ -11,9 +11,29 @@ final class SummaryViewModel {
     private let store: UserProfileStore
     private let booksStore: BooksStore
 
+    /// Chamado quando a biblioteca muda (ex.: a página de um livro foi atualizada).
+    var onBooksChange: (() -> Void)?
+
+    private nonisolated(unsafe) var changesObserver: NSObjectProtocol?
+
     init(store: UserProfileStore, booksStore: BooksStore) {
         self.store = store
         self.booksStore = booksStore
+
+        // Observador registrado já aqui, de forma síncrona: nenhuma notificação se perde
+        changesObserver = NotificationCenter.default.addObserver(
+            forName: .booksDidChange,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            MainActor.assumeIsolated { self?.onBooksChange?() }
+        }
+    }
+
+    deinit {
+        if let changesObserver {
+            NotificationCenter.default.removeObserver(changesObserver)
+        }
     }
 
     var greeting: String {
@@ -46,5 +66,12 @@ final class SummaryViewModel {
                     coverURL: $0.coverURL
                 )
             }
+    }
+
+    /// ViewModel da sheet "Current page" do livro tocado em "Reading now".
+    func currentPageViewModel(for bookID: UUID) -> CurrentPageViewModel? {
+        let books = (try? booksStore.allBooks()) ?? []
+        guard let book = books.first(where: { $0.id == bookID }) else { return nil }
+        return CurrentPageViewModel(book: book, store: booksStore)
     }
 }

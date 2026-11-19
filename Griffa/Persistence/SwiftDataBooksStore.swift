@@ -36,6 +36,13 @@ final class SwiftDataBooksStore: BooksStore {
         return try context.fetch(descriptor)
     }
 
+    func setCurrentPage(_ page: Int, for book: Book) throws {
+        book.currentPage = page
+        try context.save()
+
+        NotificationCenter.default.post(name: .booksDidChange, object: nil)
+    }
+
     private func contains(googleID: String) throws -> Bool {
         var descriptor = FetchDescriptor<Book>(predicate: #Predicate { $0.googleID == googleID })
         descriptor.fetchLimit = 1

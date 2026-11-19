@@ -69,6 +69,7 @@ final class ReadingBookCard: UIControl {
         coverImageView.contentMode = .scaleAspectFill
         coverImageView.clipsToBounds = true
         coverImageView.layer.cornerRadius = 4
+        coverImageView.isUserInteractionEnabled = false
         coverImageView.translatesAutoresizingMaskIntoConstraints = false
         
         addSubview(coverImageView)
@@ -130,7 +131,7 @@ final class ReadingBookCard: UIControl {
         textStack.alignment = .fill
         textStack.spacing = 5
         textStack.setCustomSpacing(10, after: authorLabel)
-//        textStack.isUserInteractionEnabled = false
+        textStack.isUserInteractionEnabled = false      // o toque é do card inteiro
         textStack.translatesAutoresizingMaskIntoConstraints = false
         addSubview(textStack)
         
@@ -141,6 +142,11 @@ final class ReadingBookCard: UIControl {
             textStack.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -12)
         ])
         return percentage
+    }
+
+    // Feedback de toque
+    override var isHighlighted: Bool {
+        didSet { alpha = isHighlighted ? 0.7 : 1 }
     }
 
     private func setupAccessibility(title: String, author: String, percentage: Int, pages: Int) {

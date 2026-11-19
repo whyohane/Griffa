@@ -31,6 +31,30 @@ final class SummaryViewController: UIViewController {
         summaryView.setDate(viewModel.dateText)
         summaryView.setGreeting(viewModel.greeting)
         setupGriffaNavigationBar()      // a Summary não tem o botão "+"
+        bindView()
+    }
+
+    private func bindView() {
+        summaryView.onSelectBook = { [weak self] id in
+            self?.presentCurrentPage(for: id)
+        }
+        // Página atualizada na sheet: a lista de "Reading now" se atualiza sozinha
+        viewModel.onBooksChange = { [weak self] in
+            guard let self else { return }
+            summaryView.showReadingBooks(viewModel.readingBooks())
+        }
+    }
+
+    private func presentCurrentPage(for bookID: UUID) {
+        guard let currentPageViewModel = viewModel.currentPageViewModel(for: bookID) else { return }
+        let controller = CurrentPageViewController(viewModel: currentPageViewModel)
+        let navigation = UINavigationController(rootViewController: controller)
+        if let sheet = navigation.sheetPresentationController {
+            // Sheet pequena: só a altura do conteúdo
+            sheet.detents = [.custom { _ in 500 }]
+            sheet.prefersGrabberVisible = true
+        }
+        present(navigation, animated: true)
     }
 
     // Recarrega a cada aparição: o usuário pode ter adicionado um livro na aba Books
