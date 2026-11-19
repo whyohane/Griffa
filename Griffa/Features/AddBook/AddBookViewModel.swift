@@ -16,7 +16,6 @@ final class AddBookViewModel {
         case failed(String)         // erro, com a mensagem para o usuário
     }
 
-    /// Chamado sempre que o estado muda.
     var onStateChange: ((State) -> Void)?
 
     private(set) var state: State = .idle {
@@ -34,12 +33,10 @@ final class AddBookViewModel {
         self.debounce = debounce
     }
 
-    /// ViewModel da tela de detalhes do livro escolhido na busca.
     func detailViewModel(for book: Book) -> BookDetailViewModel {
         BookDetailViewModel(book: book, store: store)
     }
 
-    /// Busca a cada pausa na digitação: cada chamada cancela a anterior.
     func search(_ text: String) {
         searchTask?.cancel()
 

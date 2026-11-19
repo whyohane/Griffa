@@ -11,11 +11,18 @@ final class MainTabBarController: UITabBarController {
     private let profileStore: UserProfileStore
     private let booksService: BooksService
     private let booksStore: BooksStore
+    private let quotesStore: QuotesStore
 
-    init(profileStore: UserProfileStore, booksService: BooksService, booksStore: BooksStore) {
+    init(
+        profileStore: UserProfileStore,
+        booksService: BooksService,
+        booksStore: BooksStore,
+        quotesStore: QuotesStore
+    ) {
         self.profileStore = profileStore
         self.booksService = booksService
         self.booksStore = booksStore
+        self.quotesStore = quotesStore
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -50,7 +57,11 @@ final class MainTabBarController: UITabBarController {
             systemImage: "books.vertical.fill"
         )
         let quotes = makeTab(
-            root: QuotesViewController(),
+            root: QuotesViewController(
+                viewModel: QuotesViewModel(store: quotesStore),
+                booksStore: booksStore,
+                quotesStore: quotesStore
+            ),
             title: "Quotes",
             systemImage: "bookmark.fill"
             )

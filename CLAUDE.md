@@ -31,15 +31,17 @@ Griffa/
 │   ├── Onboarding/
 │   ├── Summary/
 │   ├── AddBook/   sheet de busca de livros (+ BookResultsCard)
+│   ├── AddQuote/  sheet de nova quote
+│   ├── CurrentPage/  sheet de página atual (toque no card de Reading now)
 │   ├── BookDetail/   "parte 2": detalhes do livro escolhido e botão de adicionar
 │   ├── Books/
 │   └── Quotes/
 ├── Models/         UserProfile, Book (@Model), Quote (@Model), ReadingStatus
-├── Persistence/    UserProfileStore, BooksStore (protocolo), SwiftDataBooksStore
+├── Persistence/    UserProfileStore, BooksStore + SwiftDataBooksStore, QuotesStore + SwiftDataQuotesStore
 ├── Services/       BooksService (protocolo), GoogleBooksService, APIConfig, ImageLoader
 ├── Resources/      Assets.xcassets, Fonts (ElmsSans, Quicksand, Source_Serif_4)
 └── Shared/
-    ├── Components/    GriffaButton, GriffaTextField, QuoteCard, ReadingBookCard, BookRow, BookCard, LabeledDivider, GriffaSearchField
+    ├── Components/    GriffaButton, GriffaTextField, GriffaTextView, QuoteCard, ReadingBookCard, BookRow, BookCard, LabeledDivider, GriffaSearchField
     ├── DesignSystem/  Fonts
     └── Extensions/    UIViewController+GriffaNavigationBar
 ```
@@ -97,6 +99,35 @@ Imagens com versão escura usam um único imageset com a variante `appearances: 
 - **"Reading now":** abaixo do label ficam os `ReadingBookCard` dos livros com status `.reading` (capa, título, autor, barra de progresso, "N% completed", "p. X of Y"), numa scroll view com stack vertical. O `SummaryViewModel(store:booksStore:)` monta os `ReadingBookContent` (`readingBooks()`) e o controller recarrega em `viewWillAppear`, para refletir livros adicionados na aba Books. Sem livros, o label "Reading now" some. O card calcula progresso e porcentagem a partir de `currentPage` e `pages`; a altura dele é definida pelo texto.
 - Quote do dia (planejado): uma por dia, estável durante o dia. Plano: salvar `{ data, idDaQuote }` no `UserDefaults`; se a data salva for hoje, reutilizar; senão sortear nova evitando repetir a de ontem. Retorno opcional (sem livros = sem quote).
 
+## Aba Quotes
+
+- Tela: título "Quotes", `GriffaSearchField` e uma lista rolável de `QuoteCard` (título = data da quote em maiúsculas, texto, livro, "autor • p. N"). Título e busca ficam fixos; só os cards rolam (scroll view + stack, sem células reaproveitadas: se a lista ficar grande, migrar para `UICollectionView`).
+- `QuotesViewModel(store: QuotesStore)` monta os `QuoteCardContent`, filtra pela busca (texto da quote, título do livro e autor, sem diferenciar maiúsculas/acentos) e expõe `emptyText` ("No quotes yet..." ou "No quotes found."). O controller recarrega em `viewWillAppear`.
+- Persistência: protocolo `QuotesStore` (`allQuotes()`, mais recentes primeiro) + `SwiftDataQuotesStore`, criado no `SceneDelegate` com o mesmo `ModelContainer` e passado ao `MainTabBarController`.
+- `Quote` ganhou `page: Int?` (o `QuoteCard` mostra só o autor quando não há página) e `thoughts: String?` ("My thoughts", opcional; ainda não aparece em lugar nenhum: será mostrado numa feature futura ao tocar no card da quote).
+- O `QuotesViewModel` recarrega ao receber `.quotesDidChange` (observador síncrono no `init`, mesmo padrão do `BooksViewModel`), publicado pelo `SwiftDataQuotesStore.add(_:)`. O "+" abre o `AddQuoteViewController` (ver abaixo); `QuotesViewController(viewModel:booksStore:quotesStore:)` cria o `AddQuoteViewModel`.
+- Armadilha corrigida: o `QuotesViewController` não tinha `loadView()`, então a `QuotesView` nunca entrava na tela. Todo ViewController de tela precisa de `loadView() { view = xxxView }`.
+
+## Página atual (CurrentPage)
+
+- Sheet pequena (detent custom de 500pt, com grabber) aberta ao **tocar em um `ReadingBookCard`** da Summary. Título "Current page", botões nativos só com ícone: `xmark` (fecha) e `checkmark` (`.prominent`, roxo; desabilitado até a página mudar).
+- Conteúdo: capa (80×115, usa `coverData` ou baixa pela URL), título, autor, barra de progresso, "N% completed" / "p. X of Y", e uma linha com botão **−**, campo numérico grande (`GriffaTextField` centralizado) e botão **+** (roxo). Abaixo, atalhos **+5, +10, +20, +50** (`backgroundStatusBar`, texto roxo). − e + mexem 1 página; os atalhos somam. Toque fora do campo fecha o teclado.
+- `CurrentPageViewModel(book:store:)`: a página fica sempre entre 0 e o total do livro (`add(_:)` e `setPage(_:)` limitam); `canSave` só é verdadeiro se a página mudou; `save()` chama `BooksStore.setCurrentPage(_:for:)`, que salva e publica `.booksDidChange`. Livro sem total de páginas: sem limite superior (99.999), sem porcentagem, só "p. X".
+- A Summary recarrega "Reading now" sozinha: `SummaryViewModel` tem `onBooksChange` (observador síncrono de `.booksDidChange`, mesmo padrão do `BooksViewModel`) e `currentPageViewModel(for:)`. A aba Books também atualiza pelo mesmo aviso.
+- O `ReadingBookCard` agora é tocável: stack e capa não consomem o toque (`isUserInteractionEnabled = false`) e o card fica com `alpha` 0,7 enquanto pressionado.
+- A barra de progresso só anima depois que a sheet está na tela (`window != nil`); animar antes do primeiro layout deixava a barra encolhida na captura.
+- Ao chegar na última página o livro **continua em "Reading"** (não vira "Finished" sozinho): decisão em aberto.
+
+## Nova quote (AddQuote)
+
+- Sheet (`.large()`) dentro de um `UINavigationController`, título "New quote", botões nativos só com ícone: `xmark` (fecha, sem confirmação de descarte, decisão do usuário) e `checkmark` (`.prominent`, `primaryPurple`; desabilitado até `canSave`).
+- Campos: **Quote** (`GriffaTextView`, limite de 500 caracteres, contador "N/500 characters"), **Book** (`UIButton` com `UIMenu`, `showsMenuAsPrimaryAction`, opções = só os livros com status "Reading"; sem nenhum fica desabilitado com "No books being read"), **Page** (`GriffaTextField` com teclado numérico, opcional; inválida se não for número positivo ou passar do total de páginas do livro, e o texto fica vermelho) e **My thoughts** (`GriffaTextView`, opcional). A data é `Date()` no momento de salvar.
+- `canSave` = texto da quote (sem contar espaços) + livro escolhido + página válida. `thoughts` só com espaços vira `nil`.
+- `GriffaTextView` (`Shared/Components`): `UITextView` com placeholder (label por baixo, pois não há placeholder nativo), borda roxa de 2pt em foco, `maxLength` (texto colado acima do limite é cortado) e `onTextChange`.
+- Teclado: scroll view com `keyboardLayoutGuide`, `keyboardDismissMode = .onDrag` e toque fora fecha (o teclado numérico não tem tecla de retorno).
+- A página da quote **não** atualiza o `currentPage` do livro (decisão: isso virá numa sheet futura ao tocar no `ReadingBookCard` da Summary).
+- Verificado em código com store em memória (canSave em cada combinação, página inválida/opcional, thoughts vazio, quote aparece na lista) e o desenho renderizado.
+
 ## Adicionar livro (AddBook)
 
 - Aberta pelo "+" da aba Books: `BooksViewController` apresenta `AddBookViewController` dentro de um `UINavigationController` (os detents da sheet ficam no navigation). Barra com botão de texto "Cancel" (fecha a sheet) e título "Add book". Não há botão Salvar: o livro é adicionado na tela de detalhes (parte 2).
@@ -129,7 +160,7 @@ Imagens com versão escura usam um único imageset com a variante `appearances: 
 - `BooksViewModel(store:)` busca os livros (`BooksStore.allBooks()`, mais novos primeiro), monta as estantes (`Shelf`) conforme o filtro e expõe `emptyText`. **Progresso:** `currentPage` do livro; livros "Finished" contam como 100% (`p. N of N`); sem total de páginas mostra "Pages unknown".
 - **Atualização automática:** o `SwiftDataBooksStore` publica `Notification.Name.booksDidChange` depois de salvar, e o `BooksViewModel` recarrega. O observador é registrado **de forma síncrona no `init`** (`addObserver(forName:queue:)` + `MainActor.assumeIsolated`). Com `NotificationCenter.notifications(named:)` dentro de um `Task` a primeira notificação podia se perder: o `Task` ainda não tinha começado a observar (medido).
 - `ReadingStatus.read` agora se chama **"Finished"** (era "Read"), seguindo o design; vale para o seletor da tela de detalhes também. `Book` ganhou `currentPage` e `addedAt`.
-- Ainda não há ação ao tocar em um card (detalhes do livro da biblioteca) nem forma de atualizar a página atual (`currentPage` só é 0 ou, em "Finished", o total).
+- Ainda não há ação ao tocar em um card da aba Books (detalhes do livro da biblioteca). A página atual se atualiza pela sheet "Current page" da Summary.
 - Verificado: lógica do ViewModel em código (estantes, filtros, textos de progresso, ordem, refresh ao adicionar) e o desenho renderizado com capas reais baixadas. Para renderizar uma tela de verdade: `RunCodeSnippet` + `view.drawHierarchy(in:afterScreenUpdates: true)` salvando um PNG (funciona com collection views; `layer.render(in:)` saiu em branco aqui).
 
 ## API de livros (Google Books)
@@ -170,11 +201,10 @@ Conceito: o app faz uma requisição HTTP `GET` para uma URL, o servidor respond
 
 - `OnboardingViewController.title` ainda está como `"Read Books Page"` (resto de outra tela).
 - Trailing com `+20` (empurra para fora da tela; o correto é `-20`) em: `titleLabelView` no `OnboardingView`, `welcomeLabelView` e `dateLabelView` no `SummaryView`.
-- `QuotesView`, `ReadingBookCard` e `QuotesViewModel` são placeholders vazios.
 - `Book` e `Quote` são classes SwiftData (`@Model`) e o `ModelContainer` já existe (criado no `SceneDelegate`). Pendente: `@Relationship(deleteRule: .cascade, inverse:)` entre `Book.quotes` e `Quote.book` (hoje o inverso não está declarado).
 - A capa só foi testada com download falso; o download real (`ImageLoader.coverData(for:)`) e o app rodando de ponta a ponta ainda não foram vistos no simulador.
 - Previews do Xcode: nesta versão falham de forma intermitente com "initializer chaining ('super.init') cannot be nested in another expression", mesmo em arquivos que não mudaram. O app compila normalmente. Para conferir layout, `RunCodeSnippet` renderizando a view para um PNG funciona (`drawHierarchy` para collection views; `layer.render(in:)` para telas simples). Views com Liquid Glass não aparecem assim.
 - Se o clear button (x) do campo de busca dispara `.editingChanged` (e, portanto, volta para `idle`) não foi verificado.
-- `Quote` não tem a página, que o `QuoteCard` exige. Decidir onde a página mora.
+- Decidir se ao chegar na última página (CurrentPage) o livro passa para "Finished" sozinho. Detalhe da quote (com `thoughts`) ao tocar no card da aba Quotes.
 - O SVG do catinho tem nome `Frame 364.svg` (renomear).
 - A pasta `Resources/Fonts/Source_Serif_4` tem ~70 arquivos e só `SourceSerif4-SemiBoldItalic` é usado. Todos são copiados para o app; considerar apagar os demais (manter `OFL.txt`).

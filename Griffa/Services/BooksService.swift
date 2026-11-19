@@ -7,6 +7,9 @@
 
 import Foundation
 
+// `Book` é um @Model (não é Sendable): o serviço fica no MainActor, junto de quem o chama,
+// para o resultado não cruzar fronteiras de isolamento.
+@MainActor
 protocol BooksService {
     func searchBooks(matching query: String) async throws -> [Book]
 }

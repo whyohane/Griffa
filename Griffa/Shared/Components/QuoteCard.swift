@@ -6,6 +6,16 @@
 //
 import UIKit
 
+/// Dados de um `QuoteCard`.
+struct QuoteCardContent {
+    let id: UUID
+    let title: String
+    let quote: String
+    let bookTitle: String
+    let author: String
+    let page: Int?
+}
+
 final class QuoteCard: UIView {
 
     private let titleLabel = UILabel()
@@ -16,7 +26,17 @@ final class QuoteCard: UIView {
 
     private let horizontalMargin: CGFloat = 20
 
-    init(title: String, quote: String, bookTitle: String, author: String, page: Int) {
+    convenience init(content: QuoteCardContent) {
+        self.init(
+            title: content.title,
+            quote: content.quote,
+            bookTitle: content.bookTitle,
+            author: content.author,
+            page: content.page
+        )
+    }
+
+    init(title: String, quote: String, bookTitle: String, author: String, page: Int?) {
         super.init(frame: .zero)
         configure()
         setupTitleLabel(title)
@@ -102,8 +122,8 @@ final class QuoteCard: UIView {
         ])
     }
 
-    private func setupAuthorLabel(author: String, page: Int) {
-        authorLabel.text = "\(author) • p. \(page)"
+    private func setupAuthorLabel(author: String, page: Int?) {
+        authorLabel.text = page.map { "\(author) • p. \($0)" } ?? author
         authorLabel.font = Fonts.body()
         authorLabel.adjustsFontForContentSizeCategory = true
         authorLabel.textColor = .secondaryLabel
