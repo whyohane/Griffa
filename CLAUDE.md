@@ -95,9 +95,8 @@ Imagens com versão escura usam um único imageset com a variante `appearances: 
 ## Summary
 
 - Mostra saudação com o nome salvo ("Hello, Nome!"), a data de hoje em inglês e maiúsculas (`WEDNESDAY, NOVEMBER 11`, formatada no `SummaryViewModel` com `.formatted(.dateTime...locale(en_US))`), o `QuoteCard` e o label "Reading now".
-- O `QuoteCard` da Summary ainda usa dados de exemplo fixos.
+- **Quote do dia:** o `QuoteCard` da Summary mostra uma quote real. `SummaryViewModel.quoteOfTheDay()` devolve `QuoteCardContent?` (título "Quote of the day"): se já sorteou hoje (e a quote ainda existe), reaproveita; num dia novo sorteia entre as quotes salvas **evitando repetir a última** (se houver mais de uma). A escolha `{ data, id }` fica no `UserDefaults` via `QuoteOfTheDayStore` (protocolo) + `UserDefaultsQuoteOfTheDayStore`, injetado pelo `SceneDelegate` → `MainTabBarController` → `SummaryViewModel(store:booksStore:quotesStore:quoteOfTheDayStore:)`. O controller atualiza em `viewWillAppear`. Sem nenhuma quote, o card mostra o aviso "Save a quote in the Quotes tab..." (`QuoteCard.showMessage`, que esconde divisor, livro e autor). `QuoteCard` ganhou `configure(with:)`; `QuoteCardContent(quote:title:)` monta o conteúdo a partir de uma `Quote`.
 - **"Reading now":** abaixo do label ficam os `ReadingBookCard` dos livros com status `.reading` (capa, título, autor, barra de progresso, "N% completed", "p. X of Y"), numa scroll view com stack vertical. O `SummaryViewModel(store:booksStore:)` monta os `ReadingBookContent` (`readingBooks()`) e o controller recarrega em `viewWillAppear`, para refletir livros adicionados na aba Books. Sem livros, o label "Reading now" some. O card calcula progresso e porcentagem a partir de `currentPage` e `pages`; a altura dele é definida pelo texto.
-- Quote do dia (planejado): uma por dia, estável durante o dia. Plano: salvar `{ data, idDaQuote }` no `UserDefaults`; se a data salva for hoje, reutilizar; senão sortear nova evitando repetir a de ontem. Retorno opcional (sem livros = sem quote).
 
 ## Aba Quotes
 
